@@ -5,7 +5,7 @@ What
 ====
 Vagrant/Chef files for a data analysis python environment. 
 
-* Basebox = lucid64
+* Basebox = precise64
 * Creates a Python virtual environment (*pythondata* by default)
 * Installs data analysis-related Python packages and their dependencies
 * Includes packages required for [IPython Notebook](http://ipython.org/ipython-doc/dev/interactive/htmlnotebook.html) server
