@@ -1,4 +1,7 @@
-Vagrant::Config.run do |config|
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
   config.vm.define :pythondata do |pythondata_config|
     # Every Vagrant virtual environment requires a box to build off of.
     pythondata_config.vm.box = "precise64"
@@ -9,9 +12,20 @@ Vagrant::Config.run do |config|
 
     # Forward a port from the guest to the host, which allows for outside
     # computers to access the VM, whereas host only networking does not.
-    pythondata_config.vm.forward_port 80, 8080
-    pythondata_config.vm.forward_port 8000, 8001
-    pythondata_config.vm.forward_port 9999, 9998
+    # pythondata_config.vm.forward_port 80, 8080
+    # pythondata_config.vm.forward_port 8000, 8001
+    # pythondata_config.vm.forward_port 9999, 9998
+
+      # Use hostonly network with a static IP Address
+  # and enable hostmanager
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.vm.define 'jasper' do |node|
+    node.vm.hostname = 'jasper.local'
+    node.vm.network :private_network, ip: '192.168.17.17'
+    node.hostmanager.aliases = %w(www.jasper.local)
+  end
+  config.vm.provision :hostmanager
 
     pythondata_config.vm.provision :chef_solo do |chef|
       chef.cookbooks_path = "cookbooks"
@@ -24,7 +38,8 @@ Vagrant::Config.run do |config|
         "python-data" => {
             "virtualenv_dir" => "/home/vagrant/env/",
             "virtualenv_name" => "pythondata"
-        }
+        }, 
+        "gurobi-installer" => {}
       }
       chef.add_recipe "python-data"
       chef.add_recipe "openssl"
